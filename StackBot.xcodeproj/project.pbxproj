@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		65D0EE8E2E89661D0072DEC2 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 65D0EE8D2E89661D0072DEC2 /* OpenAI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		65D0EE662E87FEED0072DEC2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +33,22 @@
 		65D0EE6F2E87FEED0072DEC2 /* StackBotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StackBotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		65F2538F2E90FE4100C35DAB /* Exceptions for "StackBot" folder in "StackBot" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 65D0EE572E87FEEB0072DEC2 /* StackBot */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		65D0EE5A2E87FEEB0072DEC2 /* StackBot */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				65F2538F2E90FE4100C35DAB /* Exceptions for "StackBot" folder in "StackBot" target */,
+			);
 			path = StackBot;
 			sourceTree = "<group>";
 		};
@@ -52,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65D0EE8E2E89661D0072DEC2 /* OpenAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +130,7 @@
 			);
 			name = StackBot;
 			packageProductDependencies = (
+				65D0EE8D2E89661D0072DEC2 /* OpenAI */,
 			);
 			productName = StackBot;
 			productReference = 65D0EE582E87FEEB0072DEC2 /* StackBot.app */;
@@ -195,6 +214,9 @@
 			);
 			mainGroup = 65D0EE4F2E87FEEB0072DEC2;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				65D0EE8C2E89661D0072DEC2 /* XCRemoteSwiftPackageReference "OpenAI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 65D0EE592E87FEEB0072DEC2 /* Products */;
 			projectDirPath = "";
@@ -271,6 +293,8 @@
 /* Begin XCBuildConfiguration section */
 		65D0EE772E87FEED0072DEC2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 65D0EE5A2E87FEEB0072DEC2 /* StackBot */;
+			baseConfigurationReferenceRelativePath = Secrets.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -335,6 +359,8 @@
 		};
 		65D0EE782E87FEED0072DEC2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 65D0EE5A2E87FEEB0072DEC2 /* StackBot */;
+			baseConfigurationReferenceRelativePath = Secrets.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -392,6 +418,8 @@
 		};
 		65D0EE7A2E87FEED0072DEC2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 65D0EE5A2E87FEEB0072DEC2 /* StackBot */;
+			baseConfigurationReferenceRelativePath = Secrets.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -400,6 +428,8 @@
 				DEVELOPMENT_TEAM = YAHK4G4F5A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StackBot/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -420,6 +450,8 @@
 		};
 		65D0EE7B2E87FEED0072DEC2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 65D0EE5A2E87FEEB0072DEC2 /* StackBot */;
+			baseConfigurationReferenceRelativePath = Secrets.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -428,6 +460,8 @@
 				DEVELOPMENT_TEAM = YAHK4G4F5A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StackBot/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -448,6 +482,8 @@
 		};
 		65D0EE7D2E87FEED0072DEC2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 65D0EE5A2E87FEEB0072DEC2 /* StackBot */;
+			baseConfigurationReferenceRelativePath = Secrets.xcconfig;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -486,6 +522,8 @@
 		};
 		65D0EE802E87FEED0072DEC2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 65D0EE5A2E87FEEB0072DEC2 /* StackBot */;
+			baseConfigurationReferenceRelativePath = Secrets.xcconfig;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -558,6 +596,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		65D0EE8C2E89661D0072DEC2 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MacPaw/OpenAI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		65D0EE8D2E89661D0072DEC2 /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 65D0EE8C2E89661D0072DEC2 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 65D0EE502E87FEEB0072DEC2 /* Project object */;
 }

@@ -11,7 +11,10 @@ import SwiftUI
 struct StackBotApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ChatView()
+                .preferredColorScheme(.dark)
+                .environmentObject(HistoryViewModel())
+                .environmentObject(ChatViewModel())
         }
     }
 }
