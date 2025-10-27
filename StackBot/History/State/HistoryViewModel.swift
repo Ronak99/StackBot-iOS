@@ -8,21 +8,32 @@
 import Foundation
 
 class HistoryViewModel : ObservableObject {
-    private var state = HistoryState()
+    @Published private var state = HistoryState()
     
     var threads: [ChatThread] {
         state.threads
     }
     
-    func add(thread: ChatThread) {
+    func add(_ thread: ChatThread) {
         state.add(thread)
-        
-        // go to open ai and figure out a proper title for this.
     }
 
     func has(_ thread: ChatThread) -> Bool {
         let index = state.threads.firstIndex(where: { $0.id == thread.id })
         return index != nil
+    }
+    
+    func index(of thread: ChatThread) -> Int? {
+        let index = state.threads.firstIndex(where: { $0.id == thread.id })
+        return index
+    }
+    
+    func update(_ thread: ChatThread) {
+        DispatchQueue.main.async {
+            if let index = self.index(of: thread) {
+                self.state.threads[index] = thread
+            }
+        }
     }
 
     func find(byId id: UUID) -> ChatThread? {

@@ -8,6 +8,7 @@
 import SwiftUI
 import OpenAI
  
+
 class ChatViewModel: ObservableObject {
     @Published private var state = ChatViewState()
     
@@ -15,72 +16,108 @@ class ChatViewModel: ObservableObject {
     
     var loading: Bool { state.loading }
     
+    var openAI: OpenAI
+    
     var messages: [ChatViewState.Message] {
         state.messages
     }
     
-    func onSendMessage(content: String) {
-        let message = ChatViewState.Message.user(content: content, threadId: state.thread.id)
-        
-        state.add(message)
-//        triggerDemoAI()
-        triggerAI()
+    var userMessages: [ChatViewState.Message] {
+        state.userMessages
     }
     
-    func createNewChat(_ model: HistoryViewModel) {
+    init() {
+        let configuration = OpenAI.Configuration(token: Secrets.openAIApiKey, organizationIdentifier: Secrets.orgKey, timeoutInterval: 60.0)
+        openAI = OpenAI(configuration: configuration)
+    }
+    
+    func onSendMessage(content: String, historyViewModel: HistoryViewModel) {
+        let message = ChatViewState.Message.user(content: content, threadId: state.thread.id)
+        
+        // no message has been added yet
+        if state.userMessages.isEmpty {
+            state.thread.updateTitle(content)
+            
+            if historyViewModel.has(state.thread) {
+                historyViewModel.update(state.thread)
+            } else {
+                historyViewModel.add(state.thread)
+            }
+            
+        }
+        
+        state.add(message)
+        
+//        triggerDemoAI(historyViewModel, thread: state.thread)
+        triggerAI(historyViewModel, thread: state.thread, noAgentMessage: state.agentMessages.isEmpty)
+    }
+    
+    func createNewChat(_ historyViewModel: HistoryViewModel) {
         if state.messages.isEmpty {
             return
         }
         
-        if !model.has(state.thread) {
-            
-            model.add(thread: state.thread)
-        }
-        
         state = ChatViewState()
+        
+        if !historyViewModel.has(state.thread) {
+            historyViewModel.add(state.thread)
+        }
     }
     
     func loadHistory(_ model: HistoryViewModel, id selectedId: UUID) {
-        if !state.messages.isEmpty {
-            if !model.has(state.thread) {
-                model.add(thread: state.thread)
-            }
-        }
-        
         if let thread = model.find(byId: selectedId) {
             state = ChatViewState(thread: thread)
         }
     }
     
-    func triggerDemoAI() {
+    func triggerDemoAI(_ historyViewModel: HistoryViewModel, thread: ChatThread) {
         state.setLoading(to: true)
         
-        let threadId = state.thread.id
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            let agentMessage = ChatViewState.Message.agent(content: "Hello, I am an agent.", threadId: threadId
-            )
+        DispatchQueue.main.asyncAfter(deadline: .now() + 8) {
+            let response = "\(thread.id)"
+            let agentMessage = ChatViewState.Message.agent(content: response, threadId: thread.id)
+            
+            let threadTitle = "New thread title"
+            
+            if thread.id == self.state.thread.id {
+                self.state.thread.updateTitle(threadTitle)
+            }
+            
+            var thread = thread
+            thread.updateTitle(threadTitle);
+            historyViewModel.update(thread)
+            
             self.state.add(agentMessage)
             self.state.setLoading(to: false)
         }
     }
     
-    func triggerAI() {
-        // this will request OpenAI and stream the response back
-        // streamed response should be shown within the chat bubble
+    func getAIResponse(prompt: String, messages: [ChatQuery.ChatCompletionMessageParam], ignoreDoubleQuotes: Bool = false) async throws -> String {
+        var messages = messages
+        messages.append(.user(.init(content: .string(prompt))))
         
-        // "org-ZUyazrWPCrQHsaO9276dtx2a"
-        print(Secrets.orgKey)
+        let result = try await openAI.chats(
+            query: .init(
+                messages: messages,
+                model: "gpt-4"
+            )
+        )
         
-        let configuration = OpenAI.Configuration(token: Secrets.openAIApiKey, organizationIdentifier: Secrets.orgKey, timeoutInterval: 60.0)
-        let openAI = OpenAI(configuration: configuration)
-        
-        let threadId = state.thread.id
-        
+        // Extract the content
+            if var content = result.choices.first?.message.content {
+                if ignoreDoubleQuotes {
+                    content = content.replacingOccurrences(of: "\"", with: "")
+                }
+                return content
+            } else {
+                return "No response received."
+            }
+    }
+    
+    func triggerAI(_ historyViewModel: HistoryViewModel, thread: ChatThread, noAgentMessage: Bool) {
         let _ = Task {
             do {
-                let openAICompatible: [ChatQuery.ChatCompletionMessageParam] = messages.map {
-                    print($0)
+                let gptCompatible: [ChatQuery.ChatCompletionMessageParam] = messages.map {
                     switch($0.user) {
                         case .agent:
                             return .system(.init(content: .textContent($0.content)))
@@ -91,26 +128,37 @@ class ChatViewModel: ObservableObject {
                 
                 state.setLoading(to: true)
                 
-                let result = try await openAI.chats(
-                    query: .init(
-                        messages: openAICompatible,
-                        model: "gpt-4"
-                    )
+                let aiResponse = try await getAIResponse(
+                    prompt: "Be a helpful agent and reply with useful answers",
+                    messages: gptCompatible
                 )
                 
                 state.setLoading(to: false)
                 
-                state.add(ChatViewState.Message.agent(
-                    content: result.choices.first?.message.content ?? "Nothing to show",
-                    threadId: threadId
-                ))
+                state.add(
+                    ChatViewState.Message.agent(content: aiResponse, threadId: thread.id)
+                )
+                
+                // if there were no agent messages back when everything started, only then should I generate a title
+                if noAgentMessage {
+                    let aiTitle = try await getAIResponse(
+                        prompt: "Scan through the list of messages and suggest an appropriate title for the conversation. Make sure that the title is less than or equal to 5 words.",
+                        messages: gptCompatible,
+                        ignoreDoubleQuotes: true,
+                    )
+                    
+                    if thread.id == self.state.thread.id {
+                        self.state.thread.updateTitle(aiTitle)
+                    }
+                    
+                    var thread = thread
+                    thread.updateTitle(aiTitle);
+                    historyViewModel.update(thread)
+                }
             } catch {
                 print("Error occurred: \(error)")
             }
         }
-        
-        
     }
-    
-    func onReceiveMessage(content: String) {}
 }
+

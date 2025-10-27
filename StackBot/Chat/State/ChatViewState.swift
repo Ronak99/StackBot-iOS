@@ -20,6 +20,14 @@ struct ChatViewState {
         return ChatViewState.allMessages.filter { $0.threadId == thread.id }
     }
     
+    var userMessages: [Message] {
+        messages.filter { $0.user == .user }
+    }
+    
+    var agentMessages: [Message] {
+        messages.filter { $0.user == .agent }
+    }
+    
     mutating func add(_ message: Message) {
         ChatViewState.allMessages.append(message)
     }
@@ -60,12 +68,10 @@ struct ChatViewState {
 
 extension ChatViewState.Message {
     static func user(content: String, threadId: UUID) -> ChatViewState.Message {
-        print("Sending user message to threadId: \(threadId)")
         return ChatViewState.Message(sentBy: .user, content: content, type: .general, threadId: threadId)
     }
     
     static func agent(content: String, threadId: UUID) -> ChatViewState.Message {
-        print("Sending agent message to threadId: \(threadId)")
         return ChatViewState.Message(sentBy: .agent, content: content, type: .general, threadId: threadId)
     }
 }

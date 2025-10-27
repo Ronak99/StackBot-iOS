@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HistoryView: View {
     @EnvironmentObject var historyViewModel: HistoryViewModel
-    var onSelect: (ChatThread) -> Void
+    var onSelect: (ChatThread) -> Void 
     
     
     var body: some View {

@@ -8,12 +8,11 @@
 import Foundation
 
 struct ChatThread: Identifiable {
-    var title: String?
+    private(set) var title: String?
     var id: UUID
     
     init(title: String? = nil) {
         self.id = UUID()
-        self.title = id.uuidString
     }
     
     var getTitle: String {
